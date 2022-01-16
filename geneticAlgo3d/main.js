@@ -22,10 +22,11 @@ camera.position.set(30,20,30);
 camera.lookAt(new THREE.Vector3(10,10,10));
 
 renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRation);
+renderer.setPixelRatio(window.devicePixelRatio);
 
 controls.autoRotate=true;
 controls.autoRotateSpeed=1.0;
+controls.target.set(5,5,5);
 
 scene.add(light);
 
@@ -65,7 +66,7 @@ scene.add(goal);
 let motherGenes=[];
 let fatherGenes=[];
 let generation=0;
-const agents = [];
+let agents = [];
 
 //function for creating generation
 function newGeneration(){
@@ -149,11 +150,12 @@ function survivalOfTheFittest(){
   agents[fittestIndex].mesh.material.color.set(0X00FF00);
   agents[secondFittestIndex].mesh.material.color.set(0X00FF00);
 
+  motherGenes=agents[fittestIndex].genes;
+  fatherGenes=agents[secondFittestIndex].genes;
+
   console.log('fittest', fittestIndex, ' ', fittest );
   console.log('2ndfittest', secondFittestIndex, ' ', secondFittest );
 
-  agents[fittestIndex].mesh = new THREE.Mesh(agentGeometry, fittestMaterial);
-  agents[secondFittestIndex].mesh = new THREE.Mesh(agentGeometry,fittestMaterial);
 }
 
 //
@@ -175,6 +177,8 @@ function runSimulation(){
 //ANIMAtION
 //
 newGeneration();
+let cleared=false;
+
 function animate(){
   if(clock.getElapsedTime()<=10 && currentVector<25){
     runSimulation();
@@ -182,13 +186,25 @@ function animate(){
   else if(clock.getElapsedTime()<=15 && !fittestDone){
     survivalOfTheFittest();
     fittestDone=true;
+    cleared=false;
+  }
+  else if(clock.getElapsedTime()>=15 && !cleared){
+    //clock.stop();
+    //clock.start();
+    fittestDone=false;
+    for(let i = 0; i < 25; i++){
+      scene.remove(agents[i].mesh)
+    }
+    agents = [];
+    cleared=true;
+
   }
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   camera.aspect=(window.innerWidth/window.innerHeight);
   camera.updateProjectionMatrix();
   renderer.render(scene,camera);
-  camera.lookAt(new THREE.Vector3(10,10,10));
+  camera.lookAt(5,5,5);
   controls.update();
   requestAnimationFrame(animate);
 }
