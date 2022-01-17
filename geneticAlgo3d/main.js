@@ -48,8 +48,13 @@ const line = new THREE.Line( geometry, material );
 scene.add(line);
 
 
-
-
+//
+//CONTROLLABLE VARIABLES
+//
+let agentNumber = 5;
+let rateOfMutation=0.9;
+let geneSize=100;
+let simulationSpeed=0.08;
 
 //
 //GOAL
@@ -59,6 +64,7 @@ const goalMat = new THREE.MeshStandardMaterial({color: 0XFF0000});
 const goal = new THREE.Mesh(goalGeo, goalMat);
 goal.position.set(20,20,20);
 scene.add(goal);
+var generationDisplay=document.getElementById("domGenerationCount");
 
 //
 //GENERATIONS
@@ -67,7 +73,6 @@ let motherGenes=[];
 let fatherGenes=[];
 let generation=0;
 let agents = [];
-let agentNumber = 50
 
 //function for creating generation
 function newGeneration(){
@@ -96,15 +101,15 @@ function addAgent(){
   let mutationZ=0;
   let mutationVector=new THREE.Vector3(0,0,0);
   let mutatedVector=new THREE.Vector3(0,0,0);
-  let mutationRate=.5;
+  let mutationRate=rateOfMutation;
   if(generation<1){
-    for(let i = 0; i<20; i++){
-      genes.push(new THREE.Vector3(THREE.MathUtils.randFloat(-1,1),THREE.MathUtils.randFloat(-1,1),THREE.MathUtils.randFloat(-1,1)));
+    for(let i = 0; i<geneSize; i++){
+      genes.push(new THREE.Vector3(THREE.MathUtils.randFloat(-mutationRate,mutationRate),THREE.MathUtils.randFloat(-mutationRate,mutationRate),THREE.MathUtils.randFloat(-mutationRate,mutationRate)));
     }
   }
   else{
-    for(let i = 0; i<20; i++){
-      if(i<10){
+    for(let i = 0; i<geneSize; i++){
+      if(i<(geneSize/2)){
       mutationX=THREE.MathUtils.randFloat(-mutationRate,mutationRate);
       mutationY=THREE.MathUtils.randFloat(-mutationRate,mutationRate);
       mutationZ=THREE.MathUtils.randFloat(-mutationRate,mutationRate);
@@ -172,10 +177,12 @@ function survivalOfTheFittest(){
 //
 //SIMULATION
 //
-let simulationSpeed=0.08;
+clock.stop();
+let cleared=false;
+let generationExists=true;
 let currentVector=0;
 function runSimulation(){
-  currentVector = Math.floor((clock.elapsedTime/10) * 20);
+  currentVector = Math.floor((clock.elapsedTime/10) * geneSize);
   for(let i=0; i<agentNumber; i++){
     agents[i].mesh.position.x+=(agents[i].genes[currentVector].x*simulationSpeed);
     agents[i].mesh.position.y+=(agents[i].genes[currentVector].y*simulationSpeed);
@@ -184,43 +191,97 @@ function runSimulation(){
   }
 }
 
-//
-//ANIMAtION
-//
-newGeneration();
-let cleared=false;
-let generationExists=true;
-function animate(){
-  if(clock.getElapsedTime()<=10 && currentVector<agentNumber){
-    runSimulation();
-  }
-  else if(clock.getElapsedTime()<=15 && !fittestDone){
-    survivalOfTheFittest();
-    fittestDone=true;
-    cleared=false;
-  }
-  else if(clock.getElapsedTime()>=15 && !cleared){
-    //clock.stop();
-    //clock.start();
-    fittestDone=false;
-    for(let i = 0; i < agentNumber; i++){
-      scene.remove(agents[i].mesh)
-    }
-    console.log(motherGenes);
-    console.log(fatherGenes);
-    agents = [];
-    cleared=true;
-    generationExists=false;
-  }
-  else if(!generationExists){
-    clock.stop();
-    clock.start();
-    generation++;
-    newGeneration();
-    generationExists=true;
-    console.log('generation: ',generation);
-  }
+let startSim=false;
+function startSimulation(){
+  resetSimulation();
+  clock.start();
+  startSim=true;
+}
 
+document.getElementById("startButton").addEventListener("click", startSimulation);
+
+function updateParameters(){
+  agentNumber = document.getElementById("agents").value;
+  rateOfMutation = document.getElementById("mutationRate").value/5;
+  geneSize = document.getElementById("numberGenes").value;
+}
+
+function resetSimulation(){
+  
+  clock.stop();
+  startSim=false;
+  generation=0;
+  generationDisplay.innerText = generation;
+
+  for(let i = 0; i < agentNumber; i++){
+    scene.remove(agents[i].mesh)
+  }
+  agents=[];
+  currentVector=0;
+  updateParameters();
+  newGeneration();
+
+}
+
+//document.getElementById("resetButton").addEventListener("click", resetSimulation);
+//document.getElementById("updateButton").addEventListener("click", updateParameters);
+//
+//ANIMATION
+//
+function changeAgentNumText(){
+  document.getElementById("agentsDisplay").innerText=document.getElementById("agents").value;
+}
+document.getElementById("agents").addEventListener("change", changeAgentNumText);
+
+function changeMutationNumText(){
+  document.getElementById("mutationDisplay").innerText=document.getElementById("mutationRate").value;
+}
+document.getElementById("mutationRate").addEventListener("change", changeMutationNumText);
+
+
+function changeGeneNumText(){
+  document.getElementById("genesDisplay").innerText=document.getElementById("numberGenes").value;
+}
+document.getElementById("numberGenes").addEventListener("change", changeGeneNumText);
+
+
+
+newGeneration();
+
+function animate(){
+  if(startSim){
+    if(clock.getElapsedTime()<=10 && currentVector<geneSize){
+      runSimulation();
+    }
+    else if(clock.getElapsedTime()<=15 && !fittestDone){
+      survivalOfTheFittest();
+      fittestDone=true;
+      cleared=false;
+    }
+    else if(clock.getElapsedTime()>=15 && !cleared){
+      //clock.stop();
+      //clock.start();
+      fittestDone=false;
+      for(let i = 0; i < agentNumber; i++){
+        scene.remove(agents[i].mesh)
+      }
+      //console.log(motherGenes);
+      //console.log(fatherGenes);
+      agents = [];
+      cleared=true;
+      generationExists=false;
+    }
+  
+    else if(!generationExists){
+      clock.stop();
+      clock.start();
+      generation++;
+      generationDisplay.innerText = generation;
+      newGeneration();
+      generationExists=true;
+      //console.log('generation: ',generation);
+    }
+  }
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   camera.aspect=(window.innerWidth/window.innerHeight);

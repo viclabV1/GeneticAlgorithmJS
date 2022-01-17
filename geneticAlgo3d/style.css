@@ -2,4 +2,24 @@
   position: fixed;
   top: 0;
   left: 0;
+  z-index: -1;
+}
+
+.slidecontainer{
+  color: white;
+}
+
+body{
+  width: 25%;
+}
+
+#htmlContainer{
+  display: inline-block;
+  box-sizing: content-box;
+  width: 100%;
+  font-family: 'VT323', monospace;
+}
+
+.sliderName{
+  color: white;
 }

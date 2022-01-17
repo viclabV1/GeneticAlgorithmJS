@@ -7,7 +7,34 @@
     <title>GeneticAlgoThree</title>
   </head>
   <body>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&family=Space+Mono&family=VT323&display=swap" rel="stylesheet">
     <canvas id="mainCanvas"></canvas>
     <script type="module" src="/main.js"></script>
+  <div id="htmlContainer">
+    <h3 style="color: white;">Generation: </h3>
+    <h4 style="color: white;" id="domGenerationCount">0</h4>
+    <h6 style="color: white;">Sim must be restarted for changes <br> to take effect.</h6>
+    <h6 style="color: white;">Warning: Too many entities and/or <br> genes can crash your browser.</h6>
+    <div class="slidecontainer">
+      <h4 class="sliderName"># of Entities:</h4>
+      <h5 id="agentsDisplay">5</h5>
+        5<input type="range" min="5" max="2000" value="5" class="slider" id="agents">2000
+    </div>
+    <div class="slidecontainer">
+      <h4 class="sliderName">Mutation Rate:</h4>
+      <h5 id="mutationDisplay">1</h5>
+        1<input type="range" min="1" max="15" value="1" class="slider" id="mutationRate">15
+    </div>
+    <div class="slidecontainer">
+      <h4 class="sliderName"># of Genes:</h4>
+      <h5 id="genesDisplay">50</h5>
+        50<input type="range" min="50" max="1000" value="50" class="slider" id="numberGenes">1000
+    </div>
+    <button id="startButton">START</button>
+    <!---<button id="resetButton">RESET</button>--->
+    <!---<button id="updateButton">UPDATE</button>--->
+  </div>
+
   </body>
 </html>
