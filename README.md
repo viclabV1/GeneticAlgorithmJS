@@ -1,4 +1,7 @@
 # GeneticAlgorithmJS
+
+## Note: The most up to date version of this demonstration is on my personal website.
+
 Genetic algorithm demonstration made in JS.
 
 Every generation spawns a number of agents. The first generation is random, the later ones are genetic desendants of 
