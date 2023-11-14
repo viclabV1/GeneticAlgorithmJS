@@ -1,7 +1,7 @@
 //
 //IMPORTING
 //
-import './style.css'
+import './geneticAlgoStyles.css'
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { MathUtils } from 'three';
@@ -13,12 +13,12 @@ import { Vector3 } from 'three';
 //
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 300);
-const renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#mainCanvas")});
+const renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#geneCanvas")});
 const controls = new OrbitControls(camera, renderer.domElement);
 const light = new THREE.AmbientLight(0XFFFFFF);
 const clock = new THREE.Clock(true);
 
-camera.position.set(30,20,30);
+camera.position.set(40,20,30);
 camera.lookAt(new THREE.Vector3(10,10,10));
 
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -60,10 +60,14 @@ let simulationSpeed=0.08;
 //GOAL
 //
 const goalGeo = new THREE.BoxGeometry(1,1,1);
+const goalEdges = new THREE.EdgesGeometry(goalGeo);
+const goalEdgeLines = new THREE.LineSegments(goalEdges, new THREE.LineBasicMaterial( { color: 0xffffff } ) ); 
 const goalMat = new THREE.MeshStandardMaterial({color: 0XFF0000});
 const goal = new THREE.Mesh(goalGeo, goalMat);
+goalEdgeLines.position.set(20,20,20);
 goal.position.set(20,20,20);
 scene.add(goal);
+scene.add(goalEdgeLines)
 var generationDisplay=document.getElementById("domGenerationCount");
 
 //
