@@ -1,13 +1,27 @@
 //
 //IMPORTING
 //
-import './style.css'
+import './geneticAlgoStyles.css'
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { MathUtils } from 'three';
 import { Clock } from 'three';
 import { Vector3 } from 'three';
+import {GUI} from 'lil-gui';
 
+//
+// UI
+//
+const gui = new GUI();
+const guiControlPanel = gui.add(document, "Controls");
+const simControls = {
+  entityCount: 5,
+  mutRate: 1,
+  geneCount: 50
+};
+gui.add(simControls, 'entityCount', 5, 2000, 1);
+gui.add(simControls, 'mutRate', 1, 15, 1);
+gui.add(simControls, 'geneCount', 50, 1000, 1);
 //
 //SETTING UP SCENE
 //
@@ -18,7 +32,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const light = new THREE.AmbientLight(0XFFFFFF);
 const clock = new THREE.Clock(true);
 
-camera.position.set(30,20,30);
+camera.position.set(40,20,30);
 camera.lookAt(new THREE.Vector3(10,10,10));
 
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -60,10 +74,14 @@ let simulationSpeed=0.08;
 //GOAL
 //
 const goalGeo = new THREE.BoxGeometry(1,1,1);
+const goalEdges = new THREE.EdgesGeometry(goalGeo);
+const goalEdgeLines = new THREE.LineSegments(goalEdges, new THREE.LineBasicMaterial( { color: 0xffffff } ) ); 
 const goalMat = new THREE.MeshStandardMaterial({color: 0XFF0000});
 const goal = new THREE.Mesh(goalGeo, goalMat);
+goalEdgeLines.position.set(20,20,20);
 goal.position.set(20,20,20);
 scene.add(goal);
+scene.add(goalEdgeLines)
 var generationDisplay=document.getElementById("domGenerationCount");
 
 //
@@ -161,17 +179,11 @@ function survivalOfTheFittest(){
       fittest=fitness;
       fittestIndex=i;
     }
-    //console.log(fitness);
   }
   agents[fittestIndex].mesh.material.color.set(0X00FF00);
   agents[secondFittestIndex].mesh.material.color.set(0X00FF00);
-
   motherGenes=agents[fittestIndex].genes;
   fatherGenes=agents[secondFittestIndex].genes;
-
-  //console.log('fittest', fittestIndex, ' ', fittest, motherGenes );
-  //console.log('2ndfittest', secondFittestIndex, ' ', secondFittest, fatherGenes );
-
 }
 
 //
@@ -223,8 +235,6 @@ function resetSimulation(){
 
 }
 
-//document.getElementById("resetButton").addEventListener("click", resetSimulation);
-//document.getElementById("updateButton").addEventListener("click", updateParameters);
 //
 //ANIMATION
 //
@@ -259,14 +269,10 @@ function animate(){
       cleared=false;
     }
     else if(clock.getElapsedTime()>=15 && !cleared){
-      //clock.stop();
-      //clock.start();
       fittestDone=false;
       for(let i = 0; i < agentNumber; i++){
         scene.remove(agents[i].mesh)
       }
-      //console.log(motherGenes);
-      //console.log(fatherGenes);
       agents = [];
       cleared=true;
       generationExists=false;
@@ -279,7 +285,6 @@ function animate(){
       generationDisplay.innerText = generation;
       newGeneration();
       generationExists=true;
-      //console.log('generation: ',generation);
     }
   }
   renderer.setSize(window.innerWidth,window.innerHeight);
