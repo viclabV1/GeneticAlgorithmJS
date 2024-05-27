@@ -12,29 +12,30 @@
     <canvas id="mainCanvas"></canvas>
     <script type="module" src="/main.js"></script>
   <div id="htmlContainer">
-    <h3 style="color: white;">Generation: </h3>
-    <h4 style="color: white;" id="domGenerationCount">0</h4>
-    <h6 style="color: white;">Sim must be restarted for changes <br> to take effect.</h6>
-    <h6 style="color: white;">Warning: Too many entities and/or <br> genes can crash your browser.</h6>
-    <div class="slidecontainer">
-      <h4 class="sliderName"># of Entities:</h4>
-      <h5 id="agentsDisplay">5</h5>
-        5<input type="range" min="5" max="2000" value="5" class="slider" id="agents">2000
-    </div>
-    <div class="slidecontainer">
-      <h4 class="sliderName">Mutation Rate:</h4>
-      <h5 id="mutationDisplay">1</h5>
-        1<input type="range" min="1" max="15" value="1" class="slider" id="mutationRate">15
-    </div>
-    <div class="slidecontainer">
-      <h4 class="sliderName"># of Genes:</h4>
-      <h5 id="genesDisplay">50</h5>
-        50<input type="range" min="50" max="1000" value="50" class="slider" id="numberGenes">1000
-    </div>
-    <button id="startButton">START</button>
-    <!---<button id="resetButton">RESET</button>--->
-    <!---<button id="updateButton">UPDATE</button>--->
+    <h2 style="color: white">Genetic Algorithm</h2>
+    <details>
+      <summary style="color: white">Algo Explanation</summary>
+      <p style="color: white">
+        This is a simulator of a genetic algorithm in a basic 3D environment. 
+        Each entity in the simulation has a set of "genes". The goal of every 
+        entity is to reach the red cube. After 10 seconds, the two closest 
+        entities are chosen for the creation of a new generation of entities. 
+        The genes of those closest entities are mixed using single point 
+        <a href="https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)">crossover</a>.
+        Over time, the overall population gets better and better at reaching the goal.
+      </p>
+    </details>
+    <details>
+      <summary style="color: white">Simuator Notes</summary>
+      <h3 style="color: white">Controls</h3>
+      <p style="color: white">entityCount is the number of entities that exist in the simulation.</p>
+      <p style="color: white">mutRate is the mutation rate between generations.</p>
+      <p style="color: white">geneCount is the number of "genes" each entity has that determines its motion.</p>
+      <p style="color: white">Start and Reset buttons are pretty obvious.</p>
+      <h3 style="color: white">Other</h3>
+      <p style="color: white;">Sim must be restarted for changes <br> to take effect.</p>
+      <p style="color: white;">Warning: Too many entities and/or <br> genes can crash your browser.</p>
+    </details>
   </div>
-
   </body>
 </html>
