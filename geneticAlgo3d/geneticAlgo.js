@@ -27,7 +27,7 @@ gui.add(simControls, 'geneCount', 50, 1000, 1);
 //
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 300);
-const renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#mainCanvas")});
+const renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#geneCanvas")});
 const controls = new OrbitControls(camera, renderer.domElement);
 const light = new THREE.AmbientLight(0XFFFFFF);
 const clock = new THREE.Clock(true);
