@@ -13,15 +13,15 @@ import {GUI} from 'lil-gui';
 // UI
 //
 const gui = new GUI();
-const guiControlPanel = gui.add(document, "Controls");
-const simControls = {
+const guiControlPanel = gui.add(document, "Hyperparameters");
+const simHyperParams = {
   entityCount: 5,
   mutRate: 1,
   geneCount: 50
 };
-gui.add(simControls, 'entityCount', 5, 2000, 1);
-gui.add(simControls, 'mutRate', 1, 15, 1);
-gui.add(simControls, 'geneCount', 50, 1000, 1);
+gui.add(simHyperParams, 'entityCount', 5, 2000, 1);
+gui.add(simHyperParams, 'mutRate', 1, 15, 1);
+gui.add(simHyperParams, 'geneCount', 50, 1000, 1);
 //
 //SETTING UP SCENE
 //
@@ -210,13 +210,13 @@ function startSimulation(){
   startSim=true;
 }
 
-document.getElementById("startButton").addEventListener("click", startSimulation);
+// document.getElementById("startButton").addEventListener("click", startSimulation);
 
-function updateParameters(){
-  agentNumber = document.getElementById("agents").value;
-  rateOfMutation = document.getElementById("mutationRate").value/5;
-  geneSize = document.getElementById("numberGenes").value;
-}
+// function updateParameters(){
+//   agentNumber = document.getElementById("agents").value;
+//   rateOfMutation = document.getElementById("mutationRate").value/5;
+//   geneSize = document.getElementById("numberGenes").value;
+// }
 
 function resetSimulation(){
   
@@ -238,21 +238,21 @@ function resetSimulation(){
 //
 //ANIMATION
 //
-function changeAgentNumText(){
-  document.getElementById("agentsDisplay").innerText=document.getElementById("agents").value;
-}
-document.getElementById("agents").addEventListener("change", changeAgentNumText);
+// function changeAgentNumText(){
+//   document.getElementById("agentsDisplay").innerText=document.getElementById("agents").value;
+// }
+// document.getElementById("agents").addEventListener("change", changeAgentNumText);
 
-function changeMutationNumText(){
-  document.getElementById("mutationDisplay").innerText=document.getElementById("mutationRate").value;
-}
-document.getElementById("mutationRate").addEventListener("change", changeMutationNumText);
+// function changeMutationNumText(){
+//   document.getElementById("mutationDisplay").innerText=document.getElementById("mutationRate").value;
+// }
+// document.getElementById("mutationRate").addEventListener("change", changeMutationNumText);
 
 
-function changeGeneNumText(){
-  document.getElementById("genesDisplay").innerText=document.getElementById("numberGenes").value;
-}
-document.getElementById("numberGenes").addEventListener("change", changeGeneNumText);
+// function changeGeneNumText(){
+//   document.getElementById("genesDisplay").innerText=document.getElementById("numberGenes").value;
+// }
+// document.getElementById("numberGenes").addEventListener("change", changeGeneNumText);
 
 
 
