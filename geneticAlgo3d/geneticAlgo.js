@@ -10,19 +10,6 @@ import { Vector3 } from 'three';
 import {GUI} from 'lil-gui';
 
 //
-// UI
-//
-const gui = new GUI();
-const guiControlPanel = gui.add(document, "Hyperparameters");
-const simHyperParams = {
-  entityCount: 5,
-  mutRate: 1,
-  geneCount: 50
-};
-gui.add(simHyperParams, 'entityCount', 5, 2000, 1);
-gui.add(simHyperParams, 'mutRate', 1, 15, 1);
-gui.add(simHyperParams, 'geneCount', 50, 1000, 1);
-//
 //SETTING UP SCENE
 //
 const scene = new THREE.Scene();
@@ -82,7 +69,6 @@ goalEdgeLines.position.set(20,20,20);
 goal.position.set(20,20,20);
 scene.add(goal);
 scene.add(goalEdgeLines)
-var generationDisplay=document.getElementById("domGenerationCount");
 
 //
 //GENERATIONS
@@ -210,7 +196,6 @@ function startSimulation(){
   startSim=true;
 }
 
-// document.getElementById("startButton").addEventListener("click", startSimulation);
 
 // function updateParameters(){
 //   agentNumber = document.getElementById("agents").value;
@@ -223,14 +208,11 @@ function resetSimulation(){
   clock.stop();
   startSim=false;
   generation=0;
-  generationDisplay.innerText = generation;
-
   for(let i = 0; i < agentNumber; i++){
     scene.remove(agents[i].mesh)
   }
   agents=[];
   currentVector=0;
-  updateParameters();
   newGeneration();
 
 }
@@ -282,7 +264,6 @@ function animate(){
       clock.stop();
       clock.start();
       generation++;
-      generationDisplay.innerText = generation;
       newGeneration();
       generationExists=true;
     }
@@ -296,5 +277,21 @@ function animate(){
   controls.update();
   requestAnimationFrame(animate);
 }
+
+//
+// UI
+//
+const gui = new GUI();
+const guiControlPanel = gui.add(document, "Hyperparameters");
+const simHyperParams = {
+  entityCount: 5,
+  mutRate: 1,
+  geneCount: 50,
+  startButton: function(){startSimulation()}
+};
+gui.add(simHyperParams, 'entityCount', 5, 2000, 1);
+gui.add(simHyperParams, 'mutRate', 1, 15, 1);
+gui.add(simHyperParams, 'geneCount', 50, 1000, 1);
+gui.add(simHyperParams, 'startButton')
 
 animate();
