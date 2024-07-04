@@ -282,16 +282,24 @@ function animate(){
 // UI
 //
 const gui = new GUI();
-const guiControlPanel = gui.add(document, "Hyperparameters");
+const simControls = {
+  Start: function(){
+    startSimulation();
+  },
+  Reset: function(){}
+};
+gui.add(simControls, 'Start');
+gui.add(simControls, 'Reset');
+
 const simHyperParams = {
   entityCount: 5,
   mutRate: 1,
-  geneCount: 50,
-  startButton: function(){startSimulation()}
-};
-gui.add(simHyperParams, 'entityCount', 5, 2000, 1);
-gui.add(simHyperParams, 'mutRate', 1, 15, 1);
-gui.add(simHyperParams, 'geneCount', 50, 1000, 1);
-gui.add(simHyperParams, 'startButton')
+  geneCount: 50};
+
+const hyperParamsFolder = gui.addFolder("Hyper Parameters");
+hyperParamsFolder.add(simHyperParams, 'entityCount', 5, 2000, 1);
+hyperParamsFolder.add(simHyperParams, 'mutRate', 1, 15, 1);
+hyperParamsFolder.add(simHyperParams, 'geneCount', 50, 1000, 1);
+
 
 animate();
