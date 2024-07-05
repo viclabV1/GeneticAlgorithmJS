@@ -284,12 +284,15 @@ function animate(){
 const gui = new GUI();
 const simControls = {
   Start: function(){
+    onStartClick();
     startSimulation();
   },
-  Reset: function(){}
+  Reset: function(){
+    onResetClick();
+  }
 };
-gui.add(simControls, 'Start');
-gui.add(simControls, 'Reset');
+const startButton = gui.add(simControls, 'Start');
+const resetButton = gui.add(simControls, 'Reset');
 
 const simHyperParams = {
   entityCount: 5,
@@ -297,9 +300,25 @@ const simHyperParams = {
   geneCount: 50};
 
 const hyperParamsFolder = gui.addFolder("Hyper Parameters");
-hyperParamsFolder.add(simHyperParams, 'entityCount', 5, 2000, 1);
-hyperParamsFolder.add(simHyperParams, 'mutRate', 1, 15, 1);
-hyperParamsFolder.add(simHyperParams, 'geneCount', 50, 1000, 1);
+const entitySlider = hyperParamsFolder.add(simHyperParams, 'entityCount', 5, 2000, 1);
+const mutSlider = hyperParamsFolder.add(simHyperParams, 'mutRate', 1, 15, 1);
+const geneSlider = hyperParamsFolder.add(simHyperParams, 'geneCount', 50, 1000, 1);
 
 
 animate();
+
+function onStartClick(){
+  startButton.disable();
+  entitySlider.disable();
+  mutSlider.disable();
+  geneSlider.disable();
+  resetButton.enable();
+}
+
+function onResetClick(){
+  startButton.enable();
+  entitySlider.enable();
+  mutSlider.enable();
+  geneSlider.enable();
+  resetButton.disable()
+}
