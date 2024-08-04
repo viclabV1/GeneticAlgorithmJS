@@ -52,10 +52,11 @@ scene.add(line);
 //
 //CONTROLLABLE VARIABLES
 //
-let agentNumber = 5;
-let rateOfMutation=0.9;
-let geneSize=100;
-let simulationSpeed=0.08;
+const simHyperParams = {
+  entityCount: 10,
+  mutRate: 1,
+  geneCount: 100};
+let simulationSpeed=0.08;   
 
 //
 //GOAL
@@ -80,7 +81,7 @@ let agents = [];
 
 //function for creating generation
 function newGeneration(){
-  for(let i = 0; i<agentNumber; i ++ ){
+  for(let i = 0; i<simHyperParams.entityCount; i ++ ){
     addAgent();
   }
 
@@ -105,15 +106,15 @@ function addAgent(){
   let mutationZ=0;
   let mutationVector=new THREE.Vector3(0,0,0);
   let mutatedVector=new THREE.Vector3(0,0,0);
-  let mutationRate=rateOfMutation;
+  let mutationRate=simHyperParams.mutRate;
   if(generation<1){
-    for(let i = 0; i<geneSize; i++){
+    for(let i = 0; i<simHyperParams.geneCount; i++){
       genes.push(new THREE.Vector3(THREE.MathUtils.randFloat(-mutationRate,mutationRate),THREE.MathUtils.randFloat(-mutationRate,mutationRate),THREE.MathUtils.randFloat(-mutationRate,mutationRate)));
     }
   }
   else{
-    for(let i = 0; i<geneSize; i++){
-      if(i<(geneSize/2)){
+    for(let i = 0; i<simHyperParams.geneCount; i++){
+      if(i<(simHyperParams.geneCount/2)){
       mutationX=THREE.MathUtils.randFloat(-mutationRate,mutationRate);
       mutationY=THREE.MathUtils.randFloat(-mutationRate,mutationRate);
       mutationZ=THREE.MathUtils.randFloat(-mutationRate,mutationRate);
@@ -152,7 +153,7 @@ function survivalOfTheFittest(){
   let secondFittest=0;
   let secondFittestIndex=0;
   let thisDistance=0;
-  for(let i = 0; i<agentNumber; i ++ ){
+  for(let i = 0; i<simHyperParams.entityCount; i ++ ){
     thisDistance=agents[i].mesh.position.distanceTo(goal.position);
     fitness = 1-(thisDistance/maxDistance);
     if(fitness>secondFittest){
@@ -180,8 +181,8 @@ let cleared=false;
 let generationExists=true;
 let currentVector=0;
 function runSimulation(){
-  currentVector = Math.floor((clock.elapsedTime/10) * geneSize);
-  for(let i=0; i<agentNumber; i++){
+  currentVector = Math.floor((clock.elapsedTime/10) * simHyperParams.geneCount);
+  for(let i=0; i<simHyperParams.entityCount; i++){
     agents[i].mesh.position.x+=(agents[i].genes[currentVector].x*simulationSpeed);
     agents[i].mesh.position.y+=(agents[i].genes[currentVector].y*simulationSpeed);
     agents[i].mesh.position.z+=(agents[i].genes[currentVector].z*simulationSpeed);
@@ -196,53 +197,24 @@ function startSimulation(){
   startSim=true;
 }
 
-
-// function updateParameters(){
-//   agentNumber = document.getElementById("agents").value;
-//   rateOfMutation = document.getElementById("mutationRate").value/5;
-//   geneSize = document.getElementById("numberGenes").value;
-// }
-
 function resetSimulation(){
   
   clock.stop();
   startSim=false;
   generation=0;
-  for(let i = 0; i < agentNumber; i++){
+  for(let i = 0; i < agents.length; i++){
     scene.remove(agents[i].mesh)
   }
   agents=[];
   currentVector=0;
   newGeneration();
-
 }
-
-//
-//ANIMATION
-//
-// function changeAgentNumText(){
-//   document.getElementById("agentsDisplay").innerText=document.getElementById("agents").value;
-// }
-// document.getElementById("agents").addEventListener("change", changeAgentNumText);
-
-// function changeMutationNumText(){
-//   document.getElementById("mutationDisplay").innerText=document.getElementById("mutationRate").value;
-// }
-// document.getElementById("mutationRate").addEventListener("change", changeMutationNumText);
-
-
-// function changeGeneNumText(){
-//   document.getElementById("genesDisplay").innerText=document.getElementById("numberGenes").value;
-// }
-// document.getElementById("numberGenes").addEventListener("change", changeGeneNumText);
-
-
 
 newGeneration();
 
 function animate(){
   if(startSim){
-    if(clock.getElapsedTime()<=10 && currentVector<geneSize){
+    if(clock.getElapsedTime()<=10 && currentVector<simHyperParams.geneCount){
       runSimulation();
     }
     else if(clock.getElapsedTime()<=15 && !fittestDone){
@@ -252,7 +224,7 @@ function animate(){
     }
     else if(clock.getElapsedTime()>=15 && !cleared){
       fittestDone=false;
-      for(let i = 0; i < agentNumber; i++){
+      for(let i = 0; i < simHyperParams.entityCount; i++){
         scene.remove(agents[i].mesh)
       }
       agents = [];
@@ -285,7 +257,6 @@ const gui = new GUI();
 const simControls = {
   Start: function(){
     onStartClick();
-    startSimulation();
   },
   Reset: function(){
     onResetClick();
@@ -294,14 +265,9 @@ const simControls = {
 const startButton = gui.add(simControls, 'Start');
 const resetButton = gui.add(simControls, 'Reset');
 
-const simHyperParams = {
-  entityCount: 5,
-  mutRate: 1,
-  geneCount: 50};
-
 const hyperParamsFolder = gui.addFolder("Hyper Parameters");
 const entitySlider = hyperParamsFolder.add(simHyperParams, 'entityCount', 5, 2000, 1);
-const mutSlider = hyperParamsFolder.add(simHyperParams, 'mutRate', 1, 15, 1);
+const mutSlider = hyperParamsFolder.add(simHyperParams, 'mutRate', 0.1, 1, 0.1);
 const geneSlider = hyperParamsFolder.add(simHyperParams, 'geneCount', 50, 1000, 1);
 
 
@@ -313,6 +279,7 @@ function onStartClick(){
   mutSlider.disable();
   geneSlider.disable();
   resetButton.enable();
+  startSimulation();
 }
 
 function onResetClick(){
@@ -320,5 +287,6 @@ function onResetClick(){
   entitySlider.enable();
   mutSlider.enable();
   geneSlider.enable();
-  resetButton.disable()
+  resetButton.disable();
+  resetSimulation();
 }
