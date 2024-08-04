@@ -1,12 +1,6 @@
-//
-//IMPORTING
-//
 import './geneticAlgoStyles.css'
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
-import { MathUtils } from 'three';
-import { Clock } from 'three';
-import { Vector3 } from 'three';
 import {GUI} from 'lil-gui';
 
 //
@@ -18,17 +12,13 @@ const renderer = new THREE.WebGLRenderer({canvas: document.querySelector("#geneC
 const controls = new OrbitControls(camera, renderer.domElement);
 const light = new THREE.AmbientLight(0XFFFFFF);
 const clock = new THREE.Clock(true);
-
 camera.position.set(40,20,30);
 camera.lookAt(new THREE.Vector3(10,10,10));
-
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-
 controls.autoRotate=true;
 controls.autoRotateSpeed=1.0;
 controls.target.set(10,10,10);
-
 scene.add(light);
 
 //grid
@@ -40,14 +30,9 @@ points.push( new THREE.Vector3( 0, 0, 0 ) );
 points.push( new THREE.Vector3( 10, 0, 0 ) );
 points.push( new THREE.Vector3( 0, 0, 0 ) );
 points.push( new THREE.Vector3( 0, 0, 10 ) );
-
-
 const geometry = new THREE.BufferGeometry().setFromPoints( points );
-
 const line = new THREE.Line( geometry, material );
-
 scene.add(line);
-
 
 //
 //CONTROLLABLE VARIABLES
@@ -84,7 +69,6 @@ function newGeneration(){
   for(let i = 0; i<simHyperParams.entityCount; i ++ ){
     addAgent();
   }
-
 }
 
 class agent{
@@ -129,20 +113,15 @@ function addAgent(){
       mutationVector=new THREE.Vector3(mutationX,mutationY,mutationZ);
       mutatedVector=mutationVector.add(fatherGenes[i]);
       genes.push(mutatedVector);
-      }
-      
+      } 
     }
   }
   const thisAgent=new agent(agentMesh, genes);
-
   scene.add(thisAgent.mesh);
   agents.push(thisAgent);
 }
 
-
-
-//calculates which agents were
-//the first and second most fit, makes them mother and father
+//calculates which agents were the first and second most fit, makes them mother and father
 let fittestDone=false;
 function survivalOfTheFittest(){
   const zeroVector = new THREE.Vector3(0,0,0);
@@ -189,7 +168,6 @@ function runSimulation(){
 
   }
 }
-
 let startSim=false;
 function startSimulation(){
   resetSimulation();
@@ -198,7 +176,6 @@ function startSimulation(){
 }
 
 function resetSimulation(){
-  
   clock.stop();
   startSim=false;
   generation=0;
@@ -210,9 +187,8 @@ function resetSimulation(){
   newGeneration();
 }
 
-newGeneration();
-
 function animate(){
+  controls.autoRotate = simControls.autoRotate
   if(startSim){
     if(clock.getElapsedTime()<=10 && currentVector<simHyperParams.geneCount){
       runSimulation();
@@ -254,24 +230,22 @@ function animate(){
 // UI
 //
 const gui = new GUI();
-const simControls = {
+let simControls = {
   Start: function(){
     onStartClick();
   },
   Reset: function(){
     onResetClick();
-  }
+  },
+  autoRotate:  true
 };
 const startButton = gui.add(simControls, 'Start');
 const resetButton = gui.add(simControls, 'Reset');
-
+const orbitCheckBox = gui.add(simControls, 'autoRotate')
 const hyperParamsFolder = gui.addFolder("Hyper Parameters");
 const entitySlider = hyperParamsFolder.add(simHyperParams, 'entityCount', 5, 2000, 1);
 const mutSlider = hyperParamsFolder.add(simHyperParams, 'mutRate', 0.1, 1, 0.1);
 const geneSlider = hyperParamsFolder.add(simHyperParams, 'geneCount', 50, 1000, 1);
-
-
-animate();
 
 function onStartClick(){
   startButton.disable();
@@ -290,3 +264,4 @@ function onResetClick(){
   resetButton.disable();
   resetSimulation();
 }
+animate();
