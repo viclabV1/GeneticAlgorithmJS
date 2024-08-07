@@ -17,6 +17,6 @@ a shorter amount of time.
 
 The number of genes, number of agents (called entities on the site), and mutation rate can be adjusted.
 
-https://www.viclab.cc/geneticalgo
+https://www.viclab.cc/geneticalgorithmjs/geneticalgo3d/
 
 Inspired by https://dev.to/lukegarrigan/genetic-algorithms-in-javascript-mc3 and https://youtu.be/_Vxjh1QxApA
