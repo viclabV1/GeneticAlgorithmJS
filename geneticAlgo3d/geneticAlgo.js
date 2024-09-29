@@ -17,7 +17,7 @@ camera.lookAt(new THREE.Vector3(10,10,10));
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 controls.autoRotate=true;
-controls.autoRotateSpeed=1.0;
+controls.autoRotateSpeed=0.8;
 controls.target.set(10,10,10);
 scene.add(light);
 

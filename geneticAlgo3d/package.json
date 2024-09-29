@@ -8,9 +8,9 @@
   },
   "devDependencies": {
     "lil-gui": "^0.19.2",
-    "vite": "^2.9.16"
+    "vite": "^5.4.8"
   },
   "dependencies": {
-    "three": "^0.136.0"
+    "three": "^0.169.0"
   }
 }
